@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Undangan Ara & Ozi</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 800px; margin: auto; background: #fef9f2; }
+        .link-item { background: white; margin: 8px 0; padding: 12px; border-radius: 20px; border-left: 6px solid #c9a87b; }
+        .link-item a { text-decoration: none; color: #7b5d41; font-weight: bold; word-break: break-all; }
+        button { margin-left: 12px; background: #efdfcf; border: none; padding: 4px 12px; border-radius: 20px; cursor: pointer; }
+        textarea { width: 100%; height: 200px; margin-top: 20px; font-family: monospace; }
+    </style>
+</head>
+<body>
+<h2>📋 50 Link Undangan Siap Salin</h2>
+<p>Klik "Salin link" di samping setiap nama, lalu kirimkan ke tamu. Atau gunakan kotak teks di bawah untuk menyalin semua sekaligus.</p>
+<div id="list"></div>
+<textarea id="allLinks" readonly placeholder="Semua link akan muncul di sini..."></textarea>
+<script>
+    const namaList = [
+        "Roma", "BUDI SANTOSO", "SRI MULYANI", "AGUS WIJAYA", "DEWI ANGGRAINI",
+        "EKO PRASETYO", "RINA KUSUMA", "DEDI SETIAWAN", "SUSI SUSANTI", "ANDI PRATAMA",
+        "LINA MARLINA", "RUDI HARTONO", "NITA SARI", "JOKO WIDODO", "ANISA RAHMA",
+        "TONI KURNIAWAN", "YANTI NURHAYATI", "HENDRA GUNAWAN", "RANI ASTUTI", "DIMAS ADITYA",
+        "FITRIANI", "IRWAN HIDAYAT", "NOVI INDRIYANI", "RENALDI", "SILVIA EKA",
+        "TEGUH PRASETYO", "ULFA HANDAYANI", "VERA ANGGRAINI", "WILLY SAPUTRA", "YUNI SHARA",
+        "ZAKI MAULANA", "AYU KARTIKA", "BAYU PRATAMA", "CITRA DEWI", "DONI FIRMANSYAH",
+        "ELISA", "FARHAN RABBANI", "GITA GUMILANG", "HARIS FADILLAH", "INDAH PERMATA",
+        "JEFRI ALFIAN", "KIKI KARTIKA", "LUSI LESTARI", "MEGA MUSTIKA", "NANDO PRAYOGA",
+        "OKTAVIANI", "PUTRI AYU", "QISTINA", "RAHMAT HIDAYAT", "SANDI PRASETYA"
+    ];
+    // Ubah baris di bawah jika file undangan tidak bernama undangan.html atau berada di subfolder
+    const baseFile = "undangan.html"; // pastikan file ini satu folder dengan daftar.html
+    const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1) + baseFile;
+    const listDiv = document.getElementById("list");
+    const allLinksTextarea = document.getElementById("allLinks");
+    let allLinks = [];
+    namaList.forEach(nama => {
+        let encoded = nama.replace(/\//g, '%2F').replace(/ /g, '+');
+        let link = baseUrl + "?to=" + encoded;
+        allLinks.push(link);
+        const div = document.createElement("div");
+        div.className = "link-item";
+        div.innerHTML = `<strong>${escapeHtml(nama)}</strong><br>
+                         <a href="${link}" target="_blank">🔗 Buka undangan</a><br>
+                         <small style="font-size:12px">${link}</small><br>
+                         <button onclick="copyToClipboard('${link.replace(/'/g, "\\'")}')">📋 Salin link</button>`;
+        listDiv.appendChild(div);
+    });
+    allLinksTextarea.value = allLinks.join("\n");
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => alert("Link tersalin: " + text));
+    }
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    window.copyToClipboard = copyToClipboard;
+</script>
+<p><strong>Tips:</strong> Jika link tidak berfungsi saat diklik, pastikan file <code>undangan.html</code> berada di folder yang sama dengan file ini. Jika Anda akan meng-host ke internet, ganti <code>baseFile</code> dengan URL lengkap.</p>
+</body>
+</html>
